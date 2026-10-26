@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+/*
+  "Signal" — an operations console for disaster response.
+  Thesis: colour is a signal, not decoration. The neutral base is achromatic
+  slate on near-black; the ONLY colour in the product is the severity ramp.
+  Nothing else — no brand accent, no coloured buttons, no coloured links.
+*/
+
+@theme {
+  /* Neutral base (cool slate, near-black) */
+  --color-canvas: #0e1116; /* app background — the board */
+  --color-surface: #161b22; /* panels, table body, header bar */
+  --color-raised: #1c232b; /* row hover, inputs, menus */
+  --color-line: #2a313a; /* borders, dividers, rules */
+  --color-fg: #e6eaf0; /* primary text */
+  --color-muted: #8792a3; /* labels, secondary text */
+  --color-faint: #5c6675; /* mono IDs, timestamps, faint meta */
+
+  /* Severity ramp — the only colour, cold -> hot. Reserved absolutely. */
+  --color-sev-1: #4c8dff; /* Low       */
+  --color-sev-2: #3fb950; /* Moderate  */
+  --color-sev-3: #d9a426; /* Elevated  */
+  --color-sev-4: #f0883e; /* High      */
+  --color-sev-5: #f85149; /* Critical  */
+
+  /* Type: two deliberate faces, wired to next/font. */
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* One radius, small — applied to the whole scale so it can't drift. */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.25rem;
+  --radius-2xl: 0.25rem;
+  --radius-3xl: 0.25rem;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 13px; /* dense console base */
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Utility face carries tabular data — align digits by default. */
+  .font-mono {
+    font-feature-settings: "tnum" 1, "zero" 1;
+  }
+
+  /* Visible keyboard focus everywhere, neutral (never a severity colour). */
+  :focus-visible {
+    outline: 2px solid var(--color-muted);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-muted) 40%, transparent);
+  }
+
+  /* Thin, quiet scrollbars in keeping with an ops tool. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border-radius: 999px;
+  }
+}
+
+/* Leaflet, themed to the console: dark tiles, dark popups, quiet controls. */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--color-canvas);
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--color-surface);
+  color: var(--color-fg);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius-md);
+}
+.leaflet-popup-content {
+  margin: 0.5rem 0.625rem;
+}
+.leaflet-popup-close-button {
+  color: var(--color-muted) !important;
+}
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: var(--color-surface);
+  color: var(--color-fg);
+  border-color: var(--color-line);
+}
+.leaflet-bar a:hover {
+  background: var(--color-raised);
+}
+.leaflet-control-attribution {
+  background: rgba(22, 27, 34, 0.85) !important;
+  color: var(--color-faint) !important;
+}
+.leaflet-control-attribution a {
+  color: var(--color-muted) !important;
+}
+
+/* Honour reduced-motion; there is almost nothing to reduce by design. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
